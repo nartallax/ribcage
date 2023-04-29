@@ -1,12 +1,6 @@
-import {RCBaseTypeDefinition, RCType} from "src/types/base"
+import type {RC} from "src/ribcage"
 
-export interface RCDateDefinition extends RCBaseTypeDefinition {
-	getDefault?: () => Date
-}
-
-export type RCDate = RCType<"date", RCDateDefinition, Date>
-
-export function rcDate(def: RCDateDefinition = {}): RCDate {
+export function rcDate(def: RC.DateDefinition = {}): RC.Date {
 	return {
 		...def,
 		type: "date",

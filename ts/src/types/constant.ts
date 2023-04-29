@@ -1,20 +1,15 @@
-import {RCBaseTypeDefinition, RCType, resolveTwoArguments} from "src/types/base"
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface RCConstantDefinition extends RCBaseTypeDefinition {
-}
-
-type ConstantableType = string | number | boolean
-export type RCConstant<T extends ConstantableType> = RCType<"constant", RCConstantDefinition, T>
+import type {RC} from "src/ribcage"
+import {resolveTwoArguments} from "src/types/base"
 
 // TODO: const T here
-export function rcConstant<T extends ConstantableType>(base: RCConstantDefinition, valueType: T): RCConstant<T>
-export function rcConstant<T extends ConstantableType>(valueType: T): RCConstant<T>
-export function rcConstant<T extends ConstantableType>(a: RCConstantDefinition | T, b?: T): RCConstant<T> {
-	const [def, value] = resolveTwoArguments<RCConstantDefinition, T>(a, b, {})
+export function rcConstant<T extends RC.Constantable>(base: RC.ConstantDefinition, valueType: T): RC.Constant<T>
+export function rcConstant<T extends RC.Constantable>(valueType: T): RC.Constant<T>
+export function rcConstant<T extends RC.Constantable>(a: RC.ConstantDefinition | T, b?: T): RC.Constant<T> {
+	const [def, value] = resolveTwoArguments<RC.ConstantDefinition, T>(a, b, {})
 	return {
 		...def,
 		type: "constant",
+		value,
 		getValue: () => value
 	}
 }

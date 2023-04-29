@@ -1,6 +1,6 @@
 import {describe, test} from "@nartallax/clamsensor"
 import expect from "expect.js"
-import {RCTypeOfType} from "src/types/base"
+import {RC} from "src/ribcage"
 import {rcConstant} from "src/types/constant"
 import {rcIntersection} from "src/types/intersection"
 import {rcInt, rcString} from "src/types/primitive"
@@ -26,7 +26,7 @@ describe("intersection type", () => {
 			rcString()
 		])
 		expect(def.getValue).throwError(/Cannot form value/)
-		const check: IfEquals<RCTypeOfType<typeof def>, "owo", true, false> = true
+		const check: IfEquals<RC.Value<typeof def>, "owo", true, false> = true
 		expect(check).to.be(true)
 	})
 

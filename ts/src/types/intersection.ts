@@ -1,31 +1,26 @@
-import {RCTypeOfType, resolveTwoArguments} from "src/types/base"
-import {RCBaseTypeDefinition} from "src/types/base"
-import {RCType, RCUnknown} from "src/types/base"
-import {RCConstant} from "src/types/constant"
-import {RCBool, RCInt, RCNull, RCNumber, RCString, RCUndefined} from "src/types/primitive"
-
-export interface RCIntersectionDefinition<T extends RCUnknown> extends RCBaseTypeDefinition {
-	getDefault?: () => DefUnionToTypeIntersection<T>
-}
+import type {RC} from "src/ribcage"
+import {resolveTwoArguments} from "src/types/base"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never
 
-type PackedTypeUnion<T> = T extends RCUnknown ? [RCTypeOfType<T>] : never
+// this type exists to avoid collapsing types like `"uwu" | string` into just `string`
+// because that would lead to incorrect conversion to intersection type (`string` instead of `"uwu"`)
+type PackedTypeUnion<T> = T extends RC.Unknown ? [RC.Value<T>] : never
 type UnpackUnion<T> = T extends [infer X] ? X : never
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type RCPrimitive = RCString | RCInt | RCNumber | RCBool | RCNull | RCUndefined | RCConstant<any>
-type DefUnionToTypeIntersection<T extends RCUnknown> = [T] extends [RCPrimitive]
+type RCPrimitive = RC.String | RC.Int | RC.Number | RC.Bool | RC.Constant<RC.Constantable>
+/** This type is weird, but it needs to be this way.
+ * Intersection of primitives work kinda different from intersection of objects
+ * Intersection of primitives = most narrow type of them
+ * Intersection of objects = object with all the fields */
+export type DefUnionToTypeIntersection<T extends RC.Unknown> = [T] extends [RCPrimitive]
 	? UnpackUnion<UnionToIntersection<PackedTypeUnion<T>>>
-	: UnionToIntersection<RCTypeOfType<T>>
+	: UnionToIntersection<RC.Value<T>>
 
-
-export type RCIntersection<T extends RCUnknown> = RCType<"intersection", RCBaseTypeDefinition, DefUnionToTypeIntersection<T>>
-
-export function rcIntersection<T extends RCUnknown>(base: RCIntersectionDefinition<T>, components: T[]): RCIntersection<T>
-export function rcIntersection<T extends RCUnknown>(components: T[]): RCIntersection<T>
-export function rcIntersection<T extends RCUnknown>(a: RCIntersectionDefinition<T> | T[], b?: T[]): RCIntersection<T> {
-	const [def, components] = resolveTwoArguments<RCIntersectionDefinition<T>, T[]>(a, b, {})
+export function rcIntersection<T extends RC.Unknown>(base: RC.IntersectionDefinition<T>, components: T[]): RC.Intersection<T>
+export function rcIntersection<T extends RC.Unknown>(components: T[]): RC.Intersection<T>
+export function rcIntersection<T extends RC.Unknown>(a: RC.IntersectionDefinition<T> | T[], b?: T[]): RC.Intersection<T> {
+	const [def, components] = resolveTwoArguments<RC.IntersectionDefinition<T>, T[]>(a, b, {})
 
 	if(components.length < 1){
 		throw new Error("Cannot create intersection type of zero components.")
@@ -34,6 +29,7 @@ export function rcIntersection<T extends RCUnknown>(a: RCIntersectionDefinition<
 	return {
 		...def,
 		type: "intersection",
+		components,
 		getValue: def.getDefault ? def.getDefault : () => {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			let result: any = {}

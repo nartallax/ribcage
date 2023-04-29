@@ -1,21 +1,8 @@
-import {RCBaseTypeDefinition, RCType, RCTypeOfType, RCUnknown} from "src/types/base"
-import {RCConstant} from "src/types/constant"
-import {RCString, rcString} from "src/types/primitive"
-import {RCUnion} from "src/types/union"
-
-type RCMapKey = RCString | RCConstant<string> | RCUnion<RCString | RCConstant<string>>
-
-export interface RCObjectMapDefinition<V extends RCUnknown, K extends RCMapKey> extends RCBaseTypeDefinition {
-	key?: K
-	value: V
-	getDefault?: () => RCObjectMapValue<K, V>
-}
-
-type RCObjectMapValue<K extends RCMapKey, V extends RCUnknown> = Record<RCTypeOfType<K>, RCTypeOfType<V>>
-export type RCObjectMap<K extends RCMapKey, V extends RCUnknown> = RCType<"object_map", RCObjectMapDefinition<V, K> & {key: K}, RCObjectMapValue<K, V>>
+import type {RC} from "src/ribcage"
+import {rcString} from "src/types/primitive"
 
 /** object-map is an object used as a map */
-export function rcObjectMap<V extends RCUnknown, K extends RCMapKey = RCString>(def: RCObjectMapDefinition<V, K>): RCObjectMap<K, V> {
+export function rcObjectMap<V extends RC.Unknown, K extends RC.ObjectMapKeyType = RC.String>(def: RC.ObjectMapDefinition<V, K>): RC.ObjectMap<K, V> {
 	const key = def.key ?? rcString() as K
 	return {
 		...def,

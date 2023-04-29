@@ -1,6 +1,6 @@
 import {describe, test} from "@nartallax/clamsensor"
 import expect from "expect.js"
-import {RCTypeOfType} from "src/types/base"
+import {RC} from "src/ribcage"
 import {rcClassInstance} from "src/types/class_instance"
 
 type CheckEquals<A, B> = A extends B ? B extends A ? true : false : false
@@ -33,7 +33,7 @@ describe("class instance type", () => {
 	test("can define class instance type when class constructor has parameters", () => {
 		const def = rcClassInstance({cls: OneArgClass})
 		expect(def.getValue).throwError(/constructor expects more than zero arguments/)
-		const check: CheckEquals<RCTypeOfType<typeof def>, OneArgClass> = true
+		const check: CheckEquals<RC.Value<typeof def>, OneArgClass> = true
 		expect(check).to.be(true)
 	})
 

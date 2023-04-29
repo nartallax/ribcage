@@ -1,6 +1,6 @@
-import {RCType, RCTypeOfType, RCUnknown} from "src/types/base"
+import type {RC} from "src/ribcage"
 
-type C = {readonly [k: string]: RCUnknown}
+type C = {readonly [k: string]: RC.Unknown}
 
 type NS<F> = {normal: F}
 type NR<F> = {[k in keyof F]: F[k]}
@@ -109,32 +109,32 @@ export function rcStructFields<N extends C, R extends C, O extends C, OD extends
 
 type DefaultValueVariant = "none" | "value"
 
-export type RCOptField<V extends RCUnknown> = RCType<"optional", {defaultVariant: DefaultValueVariant}, RCTypeOfType<V> | undefined>
+export type RCOptField<V extends RC.Unknown> = RC.Type<"optional", {defaultVariant: DefaultValueVariant}, RC.Value<V> | undefined>
 
-function rcOpt<V extends RCUnknown>(defaultVariant: DefaultValueVariant, nestedType: V): RCOptField<V> {
+function rcOpt<V extends RC.Unknown>(defaultVariant: DefaultValueVariant, nestedType: V): RCOptField<V> {
 	return {
 		type: "optional",
 		defaultVariant: defaultVariant,
-		getValue: defaultVariant === "none" ? () => undefined : nestedType.getValue as () => RCTypeOfType<V>
+		getValue: defaultVariant === "none" ? () => undefined : nestedType.getValue as () => RC.Value<V>
 	}
 }
 
-export type RCRoField<V extends RCUnknown> = RCType<"readonly", {type: "readonly"}, RCTypeOfType<V> | undefined>
+export type RCRoField<V extends RC.Unknown> = RC.Type<"readonly", {type: "readonly"}, RC.Value<V> | undefined>
 
-function rcRo<T extends RCUnknown>(nestedType: T): RCRoField<T> {
+function rcRo<T extends RC.Unknown>(nestedType: T): RCRoField<T> {
 	return {
 		type: "readonly",
-		getValue: nestedType.getValue as () => RCTypeOfType<T>
+		getValue: nestedType.getValue as () => RC.Value<T>
 	}
 }
 
-export type RCRoOptField<V extends RCUnknown> = RCType<"readonly_optional", {defaultVariant: DefaultValueVariant}, RCTypeOfType<V> | undefined>
+export type RCRoOptField<V extends RC.Unknown> = RC.Type<"readonly_optional", {defaultVariant: DefaultValueVariant}, RC.Value<V> | undefined>
 
-function rcRoOpt<V extends RCUnknown>(defaultVariant: DefaultValueVariant, nestedType: V): RCRoOptField<V> {
+function rcRoOpt<V extends RC.Unknown>(defaultVariant: DefaultValueVariant, nestedType: V): RCRoOptField<V> {
 	return {
 		defaultVariant,
 		type: "readonly_optional",
-		getValue: defaultVariant === "none" ? () => undefined : nestedType.getValue as () => RCTypeOfType<V>
+		getValue: defaultVariant === "none" ? () => undefined : nestedType.getValue as () => RC.Value<V>
 	}
 }
 

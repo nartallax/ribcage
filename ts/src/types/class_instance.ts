@@ -1,14 +1,6 @@
-import {RCBaseTypeDefinition, RCType} from "src/types/base"
+import type {RC} from "src/ribcage"
 
-export interface RCClassInstanceDefinition<C> extends RCBaseTypeDefinition {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	cls: {new(...args: any[]): C}
-	getDefault?: () => C
-}
-
-export type RCClassInstance<C> = RCType<"class_instance", RCClassInstanceDefinition<C>, C>
-
-export function rcClassInstance<C>(def: RCClassInstanceDefinition<C>): RCClassInstance<C> {
+export function rcClassInstance<C>(def: RC.ClassInstanceDefinition<C>): RC.ClassInstance<C> {
 	return {
 		...def,
 		type: "class_instance",
