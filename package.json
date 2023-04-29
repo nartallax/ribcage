@@ -3,11 +3,28 @@
   "version": "1.0.0",
   "description": "Typescript library about defining shapes of data structures",
   "main": "ribcage.js",
+  "types": "ribcage.d.ts",
+  "files": [
+    "ribcage.d.ts",
+    "ribcage.js.map"
+  ],
   "scripts": {
     "test": "npm run test:generate && npm run test:build && npm run test:run",
     "test:generate": "node ./node_modules/.bin/clamsensor_codegen ts/test ts/generated/test.ts",
     "test:build": "./node_modules/.bin/parcel build --target test --no-cache",
-    "test:run": "node ./dist/test/test.js"
+    "test:run": "node ./dist/test/test.js",
+    "dts": "npm run dts:generate && npm run dts:fix && npm run dts:cleanup",
+    "dts:generate": "./node_modules/.bin/dts-bundle-generator -o target/tmp_ribcage.d.ts --project tsconfig.json --export-referenced-types false --no-banner ts/src/ribcage.ts",
+    "dts:fix": "sed 's/export [*] from.*//g' target/tmp_ribcage.d.ts | sed 's/export [{][}].*//g' > ./target/ribcage.d.ts",
+    "dts:cleanup": "rm target/tmp_ribcage.d.ts",
+    "typecheck": "cd ts && ../node_modules/typescript/bin/tsc --noEmit && cd - > /dev/null",
+    "build": "npm run typecheck && npm run build:prepare && npm run dts && npm run build:build && npm run build:copy_artifacts && npm run build:copy_static",
+    "build:prepare": "rm -rf ./target && rm -rf ./dist && mkdir ./target",
+    "build:build": "./node_modules/.bin/parcel build --target release --no-cache",
+    "build:copy_artifacts": "cp ./dist/release/* ./target/",
+    "build:copy_static": "cp ./package.json ./target/ && cp ./LICENSE ./target/ && cp ./README.md ./target",
+    "pub": "npm run test && npm run build && npm run pub:publish",
+    "pub:publish": "cd target && npm publish --access public && cd .."
   },
   "repository": {
     "type": "git",
@@ -21,10 +38,13 @@
   "homepage": "https://github.com/nartallax/ribcage#readme",
   "devDependencies": {
     "@nartallax/clamsensor": "^2.0.3",
+    "@parcel/packager-ts": "^2.8.3",
     "@parcel/plugin": "^2.8.3",
+    "@parcel/transformer-typescript-types": "^2.8.3",
     "@types/expect.js": "^0.3.29",
     "@typescript-eslint/eslint-plugin": "^5.59.1",
     "@typescript-eslint/parser": "^5.59.1",
+    "dts-bundle-generator": "^8.0.1",
     "eslint": "^8.39.0",
     "expect.js": "^0.3.1",
     "parcel": "^2.8.3",
@@ -42,6 +62,10 @@
       "isLibrary": true,
       "outputFormat": "esmodule",
       "optimize": true
+    },
+    "types": {
+      "source": "./ts/src/ribcage.ts",
+      "sourceMap": false
     }
   }
 }

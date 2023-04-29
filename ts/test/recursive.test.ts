@@ -22,4 +22,5 @@ describe("recursive type definition", () => {
 		value.next = {value: 5, next: {value: 10}}
 		expect(value).to.eql({value: 0, next: {value: 5, next: {value: 10}}})
 	})
+
 })

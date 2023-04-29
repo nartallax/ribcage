@@ -1,8 +1,8 @@
 # Ribcage
 
-When you need types to stay in runtime.  
+When you need your types to stay in runtime.  
 
-Ribcage is a library that allows you to describe values just like you would in TypeScript. The only difference is that this description will stay in runtime, allowing (more elegantly) implement stuff like validation, serialization, DB interfaces, and any other purpose for which you may need to know the structure of the type.  
+Ribcage is a library that allows you to describe shapes of values just like you would in TypeScript. The only difference is that this description will stay in runtime, allowing for (more elegant) implementation of stuff like validation, serialization, DB interfaces, and any other purpose for which you may need to know the structure of the type.  
 
 This library on its own doesn't do much. It allows to define the shape, produce the type this shape describes, and obtain "default" value; that's it. But this library meant to be extensible; that means that other libraries are encouraged to extend its interfaces, allowing to attach custom properties and using shape data structures.  
 
@@ -72,9 +72,9 @@ In following example a structure of simple linked list is defined; as you can se
 import {RC} from "@nartallax/ribcage"
 
 // linked list
-const def: RC.Struct<{value: RC.Int, next?: RC.Unknown}> = rcStruct(rcStructFields({
-	normal: { value: rcInt() },
-	opt: { next: rcRecursiveType(() => def) }
+const def: RC.Struct<{value: RC.Int, next?: RC.Unknown}> = RC.Struct(RC.StructFields({
+	normal: { value: RC.Int() },
+	opt: { next: RC.RecursiveType(() => def) }
 }))
 ```
 
@@ -86,7 +86,7 @@ However, you can create a function that will create a type for you, which is, in
 ```typescript
 import {RC} from "@nartallax/ribcage"
 
-function tupleOfTwo<T extends RC.Unknown>(type: T): RC.Tuple<[T, T]>{
+function tupleOfTwo<T extends RC.Unknown>(type: T): RC.Tuple<readonly [T, T]>{
 	return RC.Tuple([type, type] as const)
 }
 ```
