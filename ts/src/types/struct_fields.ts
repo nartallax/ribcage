@@ -107,11 +107,7 @@ export function rcStructFields<N extends C, R extends C, O extends C, OD extends
 	return result
 }
 
-type DefaultValueVariant = "none" | "value"
-
-export type RCOptField<V extends RC.Unknown> = RC.Type<"optional", {defaultVariant: DefaultValueVariant}, RC.Value<V> | undefined>
-
-function rcOpt<V extends RC.Unknown>(defaultVariant: DefaultValueVariant, nestedType: V): RCOptField<V> {
+export function rcOpt<V extends RC.Unknown>(defaultVariant: RC.OptionalDefaultValueVariant, nestedType: V): RC.OptField<V> {
 	return {
 		type: "optional",
 		defaultVariant: defaultVariant,
@@ -119,18 +115,14 @@ function rcOpt<V extends RC.Unknown>(defaultVariant: DefaultValueVariant, nested
 	}
 }
 
-export type RCRoField<V extends RC.Unknown> = RC.Type<"readonly", {type: "readonly"}, RC.Value<V> | undefined>
-
-function rcRo<T extends RC.Unknown>(nestedType: T): RCRoField<T> {
+export function rcRo<T extends RC.Unknown>(nestedType: T): RC.RoField<T> {
 	return {
 		type: "readonly",
 		getValue: nestedType.getValue as () => RC.Value<T>
 	}
 }
 
-export type RCRoOptField<V extends RC.Unknown> = RC.Type<"readonly_optional", {defaultVariant: DefaultValueVariant}, RC.Value<V> | undefined>
-
-function rcRoOpt<V extends RC.Unknown>(defaultVariant: DefaultValueVariant, nestedType: V): RCRoOptField<V> {
+export function rcRoOpt<V extends RC.Unknown>(defaultVariant: RC.OptionalDefaultValueVariant, nestedType: V): RC.RoOptField<V> {
 	return {
 		defaultVariant,
 		type: "readonly_optional",

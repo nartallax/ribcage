@@ -17,9 +17,12 @@ export function rcStruct<F extends RC.StructFields>(a: RC.StructDefinition | F, 
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const result: any = {}
 			for(const key in fields){
-				// FIXME: don't put optionals here
+				const field = fields[key] as RC.ObjectFieldType
+				if((field.type === "optional" || field.type === "readonly_optional") && field.defaultVariant === "none"){
+					continue // no field
+				}
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				result[key] = fields[key]!.getValue() as any
+				result[key] = field.getValue() as any
 			}
 			return result
 		}

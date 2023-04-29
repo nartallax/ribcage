@@ -25,8 +25,10 @@ describe("struct type", () => {
 			optDefault: {z: rcInt()}
 		}))
 		const instance = struct.getValue()
-		expect(instance).to.eql({x: undefined, y: 5, z: 0})
+		expect(instance).to.eql({y: 5, z: 0})
 		instance.z = undefined
+		instance.x = undefined
+		instance.x = 5
 		const check: IsOptFields<typeof instance, string, number> = 321
 		expect(check).to.be(321)
 
@@ -54,7 +56,7 @@ describe("struct type", () => {
 			roOptDefault: {y: rcInt()}
 		}))
 		const instance = struct.getValue()
-		expect(instance).to.eql({x: undefined, y: 0})
+		expect(instance).to.eql({y: 0})
 		const check: IsOptFields<typeof instance, string, number> = "owo"
 		expect(check).to.be("owo")
 	})

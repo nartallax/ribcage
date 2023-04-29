@@ -171,4 +171,11 @@ export namespace RC {
 	/** A type union of all the types defined by this library */
 	// eslint-disable-next-line @typescript-eslint/ban-types
 	export type Any = RC.Array<Unknown> | RoArray<Unknown> | Binary | ClassInstance<unknown> | Date | Constant<Constantable> | Intersection<Unknown> | Map<Unknown, Unknown> | ObjectMap<ObjectMapKeyType, Unknown> | String | Number | Int | Bool | Set<Unknown> | Struct<StructFields> | Tuple<Unknown[]> | Union<Unknown>
+
+
+	export type OptionalDefaultValueVariant = "none" | "value"
+	export type OptField<V extends Unknown> = Type<"optional", {defaultVariant: OptionalDefaultValueVariant}, Value<V> | undefined>
+	export type RoField<V extends Unknown> = Type<"readonly", {type: "readonly"}, Value<V>>
+	export type RoOptField<V extends Unknown> = Type<"readonly_optional", {defaultVariant: OptionalDefaultValueVariant}, Value<V> | undefined>
+	export type ObjectFieldType = Any | OptField<Unknown> | RoField<Unknown> | RoOptField<Unknown>
 }
