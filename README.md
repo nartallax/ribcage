@@ -63,6 +63,34 @@ function makeCoords(): Coords {
 
 There are other types not listed here, like `RC.set` or `RC.Date`. I think they are self-explanatory; feel free to discover typings to find out more.  
 
+## Recursive types
+
+Support of recursive types is kinda bad. You can still have them, but you'll need to type stuff explicitly.  
+In following example a structure of simple linked list is defined; as you can see, for that you need to type `def` explicitly; this also means that `RC.Value` won't be as effective:  
+
+```typescript
+import {RC} from "@nartallax/ribcage"
+
+// linked list
+const def: RC.Struct<{value: RC.Int, next?: RC.Unknown}> = rcStruct(rcStructFields({
+	normal: { value: rcInt() },
+	opt: { next: rcRecursiveType(() => def) }
+}))
+```
+
+## Generic types
+
+Right now there's no way to define proper generic type.  
+However, you can create a function that will create a type for you, which is, in a way, a generic type:  
+
+```typescript
+import {RC} from "@nartallax/ribcage"
+
+function tupleOfTwo<T extends RC.Unknown>(type: T): RC.Tuple<[T, T]>{
+	return RC.Tuple([type, type] as const)
+}
+```
+
 ## Naming
 
 This library is just a skeleton; not very useful on its own, but allows more of the "meat" to be attached to its parts.  

@@ -7,6 +7,7 @@ import {DefUnionToTypeIntersection, rcIntersection} from "src/types/intersection
 import {rcMap} from "src/types/map"
 import {rcObjectMap} from "src/types/object_map"
 import {rcBool, rcInt, rcNumber, rcString} from "src/types/primitive"
+import {rcRecursiveType} from "src/types/recursive"
 import {rcSet} from "src/types/set"
 import {rcStruct} from "src/types/struct"
 import {rcStructFields} from "src/types/struct_fields"
@@ -167,6 +168,13 @@ export namespace RC {
 	export interface UnionDefinition extends BaseTypeDefinition {}
 	export type Union<T extends Unknown> = Type<"union", UnionDefinition & {components: T[]}, Value<T>>
 	export const union = rcUnion
+
+
+	// eslint-disable-next-line @typescript-eslint/no-empty-interface
+	export interface RecursiveTypeDefinition extends BaseTypeDefinition {}
+	export type Recursive = Type<"recursive", RecursiveTypeDefinition & {getType: () => Unknown}, unknown>
+	export const recursive = rcRecursiveType
+
 
 	/** A type union of all the types defined by this library */
 	// eslint-disable-next-line @typescript-eslint/ban-types
