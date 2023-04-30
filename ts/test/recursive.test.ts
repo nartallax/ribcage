@@ -9,7 +9,7 @@ import {rcStructFields} from "src/types/struct_fields"
 describe("recursive type definition", () => {
 	test("can describe simple recursive type", () => {
 		// linked list
-		const def: RC.Struct<{value: RC.Int, next?: RC.Unknown}> = rcStruct(rcStructFields({
+		const def: RC.Struct<{value: RC.Int, next?: RC.Any}> = rcStruct(rcStructFields({
 			normal: {
 				value: rcInt()
 			},

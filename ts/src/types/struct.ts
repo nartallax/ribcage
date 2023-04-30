@@ -17,7 +17,7 @@ export function rcStruct<F extends RC.StructFields>(a: RC.StructDefinition | F, 
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const result: any = {}
 			for(const key in fields){
-				const field = fields[key] as RC.ObjectFieldType
+				const field = fields[key]!
 				if((field.type === "optional" || field.type === "readonly_optional") && field.defaultVariant === "none"){
 					continue // no field
 				}

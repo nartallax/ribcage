@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
 import {rcArray, rcRoArray} from "src/types/array"
 import {rcBinary} from "src/types/binary"
 import {rcClassInstance} from "src/types/class_instance"
@@ -39,14 +40,17 @@ export namespace RC {
 
 	/** Some type that is not known.
 	 * Exists to serve as type parameter constraint */
-	export type Unknown = Type<string, BaseTypeDefinition, unknown>
+	export type Unknown = Type<string, unknown, unknown>
 
 
 	export interface ArrayDefinition<V extends Unknown> extends BaseTypeDefinition {
 		getDefault?: () => Value<V>[]
 	}
-	export type Array<V extends Unknown> = Type<"array", ArrayDefinition<V> & {valueType: V}, Value<V>[]>
-	export type RoArray<V extends Unknown> = Type<"array", ArrayDefinition<V> & {valueType: V}, readonly Value<V>[]>
+	// terminal shape types NEEDS to be interfaces
+	// because with interface you can do `type Any = Array<Any>`
+	// if Array is type expression - you cannot do that because of recursive type definition
+	export interface Array<V extends Unknown = Any> extends Type<"array", ArrayDefinition<V> & {valueType: V}, Value<V>[]> {}
+	export interface RoArray<V extends Unknown = Any> extends Type<"array", ArrayDefinition<V> & {valueType: V}, readonly Value<V>[]> {}
 	export const array = rcArray
 	export const roArray = rcRoArray
 
@@ -54,7 +58,7 @@ export namespace RC {
 	export interface BinaryDefinition extends BaseTypeDefinition {
 		getDefault?: () => Uint8Array
 	}
-	export type Binary = Type<"binary", BinaryDefinition, Uint8Array>
+	export interface Binary extends Type<"binary", BinaryDefinition, Uint8Array> {}
 	export const binary = rcBinary
 
 
@@ -63,31 +67,29 @@ export namespace RC {
 		cls: {new(...args: any[]): C}
 		getDefault?: () => C
 	}
-	export type ClassInstance<C> = Type<"class_instance", ClassInstanceDefinition<C>, C>
+	export interface ClassInstance<C = unknown> extends Type<"class_instance", ClassInstanceDefinition<C>, C> {}
 	export const classInstance = rcClassInstance
 
 
 	/** A type of value that can be a constant */
 	export type Constantable = string | number | boolean | null | undefined
 	// TODO: const T here..?
-	// eslint-disable-next-line @typescript-eslint/no-empty-interface
-	export interface ConstantDefinition extends BaseTypeDefinition {
-	}
-	export type Constant<T extends Constantable> = Type<"constant", ConstantDefinition & {value: T}, T>
+	export interface ConstantDefinition extends BaseTypeDefinition {}
+	export interface Constant<T extends Constantable = Constantable> extends Type<"constant", ConstantDefinition & {value: T}, T> {}
 	export const constant = rcConstant
 
 
 	export interface DateDefinition extends BaseTypeDefinition {
 		getDefault?: () => NativeDate
 	}
-	export type Date = Type<"date", DateDefinition, NativeDate>
+	export interface Date extends Type<"date", DateDefinition, NativeDate> {}
 	export const date = rcDate
 
 
 	export interface IntersectionDefinition<T extends Unknown> extends BaseTypeDefinition {
 		getDefault?: () => DefUnionToTypeIntersection<T>
 	}
-	export type Intersection<T extends Unknown> = Type<"intersection", IntersectionDefinition<T> & {components: T[]}, DefUnionToTypeIntersection<T>>
+	export interface Intersection<T extends Unknown = Any> extends Type<"intersection", IntersectionDefinition<T> & {components: T[]}, DefUnionToTypeIntersection<T>>{}
 	export const intersection = rcIntersection
 
 
@@ -96,7 +98,7 @@ export namespace RC {
 		value: V
 		getDefault?: () => NativeMap<Value<K>, Value<V>>
 	}
-	export type Map<K extends Unknown, V extends Unknown> = Type<"map", MapDefinition<K, V>, NativeMap<Value<K>, Value<V>>>
+	export interface Map<K extends Unknown = Any, V extends Unknown = Any> extends Type<"map", MapDefinition<K, V>, NativeMap<Value<K>, Value<V>>>{}
 	export const map = rcMap
 
 	// eslint-disable-next-line @typescript-eslint/ban-types
@@ -107,83 +109,78 @@ export namespace RC {
 		value: V
 		getDefault?: () => ObjectMapValue<K, V>
 	}
-	export type ObjectMap<K extends ObjectMapKeyType, V extends Unknown> = Type<"object_map", ObjectMapDefinition<V, K> & {key: K}, ObjectMapValue<K, V>>
+	export interface ObjectMap<K extends ObjectMapKeyType = ObjectMapKeyType, V extends Unknown = Any> extends Type<"object_map", ObjectMapDefinition<V, K> & {key: K}, ObjectMapValue<K, V>> {}
 	export const objectMap = rcObjectMap
 
 
 	export interface StringDefiniton extends BaseTypeDefinition {
 		default?: string
 	}
-	export type String = Type<"string", StringDefiniton & {default: string}, string>
+	export interface String extends Type<"string", StringDefiniton & {default: string}, string> {}
 	export const string = rcString
 
 
 	export interface NumberDefinition extends BaseTypeDefinition {
 		default?: number
 	}
-	export type Number = Type<"number", NumberDefinition & {default: number}, number>
+	export interface Number extends Type<"number", NumberDefinition & {default: number}, number> {}
 	export const number = rcNumber
 
 
-	// eslint-disable-next-line @typescript-eslint/no-empty-interface
 	export interface IntDefinition extends NumberDefinition {}
-	export type Int = Type<"int", IntDefinition & {default: number}, number>
+	export interface Int extends Type<"int", IntDefinition & {default: number}, number>{}
 	export const int = rcInt
 
 
 	export interface BoolDefinition extends BaseTypeDefinition {
 		default?: boolean
 	}
-	export type Bool = Type<"bool", BoolDefinition & {default: boolean}, boolean>
+	export interface Bool extends Type<"bool", BoolDefinition & {default: boolean}, boolean>{}
 	export const bool = rcBool
 
 
 	export interface SetDefinition<T extends Unknown> extends BaseTypeDefinition {
 		getDefault?: () => NativeSet<Value<T>>
 	}
-	export type Set<T extends Unknown> = Type<"set", SetDefinition<T> & {value: T}, NativeSet<Value<T>>>
+	export interface Set<T extends Unknown = Any> extends Type<"set", SetDefinition<T> & {value: T}, NativeSet<Value<T>>>{}
 	export const set = rcSet
 
 
-	// eslint-disable-next-line @typescript-eslint/no-empty-interface
 	export interface StructDefinition extends BaseTypeDefinition {}
-	export type StructFields = {readonly [k: string]: Unknown}
-	export type Struct<F extends StructFields> = Type<"struct", StructDefinition & {fields: Readonly<F>}, {
+	export type StructFields<T extends Unknown = AnyObjectFieldType> = {readonly [k: string]: T}
+	export interface Struct<F extends StructFields = {readonly [k: string]: Any}> extends Type<"struct", StructDefinition & {fields: Readonly<F>}, {
 		[k in keyof F]: Value<F[k]>
-	}>
+	}>{}
 	export const struct = rcStruct
 	export const structFields = rcStructFields
 
 
-	// eslint-disable-next-line @typescript-eslint/no-empty-interface
 	export interface TupleDefinition extends BaseTypeDefinition {}
 	export type TupleValue<T extends readonly Unknown[]> = T extends readonly [infer V extends Unknown, ...(infer R extends readonly Unknown[])]
 		? [Value<V>, ...TupleValue<R>]
 		: []
-	export type Tuple<T extends readonly Unknown[]> = Type<"tuple", TupleDefinition & {components: T}, TupleValue<T>>
+	export interface Tuple<T extends readonly Unknown[] = readonly Any[]> extends Type<"tuple", TupleDefinition & {components: T}, TupleValue<T>>{}
 	export const tuple = rcTuple
 
 
-	// eslint-disable-next-line @typescript-eslint/no-empty-interface
 	export interface UnionDefinition extends BaseTypeDefinition {}
-	export type Union<T extends Unknown> = Type<"union", UnionDefinition & {components: T[]}, Value<T>>
+	export interface Union<T extends Unknown = Any> extends Type<"union", UnionDefinition & {components: T[]}, Value<T>>{}
 	export const union = rcUnion
 
 
-	// eslint-disable-next-line @typescript-eslint/no-empty-interface
 	export interface RecursiveTypeDefinition extends BaseTypeDefinition {}
-	export type Recursive = Type<"recursive", RecursiveTypeDefinition & {getType: () => Unknown}, unknown>
+	export interface Recursive extends Type<"recursive", RecursiveTypeDefinition & {getType: () => Unknown}, unknown>{}
 	export const recursive = rcRecursiveType
 
 
 	/** A type union of all the types defined by this library */
 	// eslint-disable-next-line @typescript-eslint/ban-types
-	export type Any = RC.Array<Unknown> | RoArray<Unknown> | Binary | ClassInstance<unknown> | Date | Constant<Constantable> | Intersection<Unknown> | Map<Unknown, Unknown> | ObjectMap<ObjectMapKeyType, Unknown> | String | Number | Int | Bool | Set<Unknown> | Struct<StructFields> | Tuple<Unknown[]> | Union<Unknown>
+	export type Any = Array | RoArray | Binary | ClassInstance | Date | Constant | Intersection | Map | ObjectMap | String | Number | Int | Bool | Set | Struct | Tuple | Union | Recursive
 
 
 	export type OptionalDefaultValueVariant = "none" | "value"
-	export type OptField<V extends Unknown> = Type<"optional", {defaultVariant: OptionalDefaultValueVariant}, Value<V> | undefined>
-	export type RoField<V extends Unknown> = Type<"readonly", {type: "readonly"}, Value<V>>
-	export type RoOptField<V extends Unknown> = Type<"readonly_optional", {defaultVariant: OptionalDefaultValueVariant}, Value<V> | undefined>
-	export type ObjectFieldType = Any | OptField<Unknown> | RoField<Unknown> | RoOptField<Unknown>
+	export type OptField<V extends Unknown = Any> = Type<"optional", {defaultVariant: OptionalDefaultValueVariant}, Value<V> | undefined>
+	export type RoField<V extends Unknown = Any> = Type<"readonly", {type: "readonly"}, Value<V>>
+	export type RoOptField<V extends Unknown = Any> = Type<"readonly_optional", {defaultVariant: OptionalDefaultValueVariant}, Value<V> | undefined>
+	export type AnyObjectFieldType = Any | OptField | RoField | RoOptField
 }

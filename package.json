@@ -1,6 +1,6 @@
 {
   "name": "@nartallax/ribcage",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Typescript library about defining shapes of data structures",
   "main": "ribcage.js",
   "types": "ribcage.d.ts",
@@ -9,7 +9,7 @@
     "ribcage.js.map"
   ],
   "scripts": {
-    "test": "npm run test:generate && npm run test:build && npm run test:run",
+    "test": "npm run typecheck && npm run test:generate && npm run test:build && npm run test:run",
     "test:generate": "node ./node_modules/.bin/clamsensor_codegen ts/test ts/generated/test.ts",
     "test:build": "./node_modules/.bin/parcel build --target test --no-cache",
     "test:run": "node ./dist/test/test.js",
@@ -18,7 +18,7 @@
     "dts:fix": "sed 's/export [*] from.*//g' target/tmp_ribcage.d.ts | sed 's/export [{][}].*//g' > ./target/ribcage.d.ts",
     "dts:cleanup": "rm target/tmp_ribcage.d.ts",
     "typecheck": "cd ts && ../node_modules/typescript/bin/tsc --noEmit && cd - > /dev/null",
-    "build": "npm run typecheck && npm run build:prepare && npm run dts && npm run build:build && npm run build:copy_artifacts && npm run build:copy_static",
+    "build": "npm run build:prepare && npm run dts && npm run build:build && npm run build:copy_artifacts && npm run build:copy_static",
     "build:prepare": "rm -rf ./target && rm -rf ./dist && mkdir ./target",
     "build:build": "./node_modules/.bin/parcel build --target release --no-cache",
     "build:copy_artifacts": "cp ./dist/release/* ./target/",
