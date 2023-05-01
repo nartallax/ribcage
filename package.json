@@ -1,14 +1,10 @@
 {
   "name": "@nartallax/ribcage",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Typescript library about defining shapes of data structures",
   "main": "ribcage.js",
   "types": "ribcage.d.ts",
-  "exports": {
-    "import": "./esm/ribcage.mjs",
-    "require": "./cjs/ribcage.cjs"
-  },
-  "type": "module",
+  "type": "module",  
   "scripts": {
     "test": "npm run typecheck && npm run test:generate && npm run test:build && npm run test:run",
     "test:generate": "node ./node_modules/.bin/clamsensor_codegen ts/test ts/generated/test.ts",
@@ -19,10 +15,9 @@
     "dts:fix": "sed 's/export [*] from.*//g' target/tmp_ribcage.d.ts | sed 's/export [{][}].*//g' > ./target/ribcage.d.ts",
     "dts:cleanup": "rm target/tmp_ribcage.d.ts",
     "typecheck": "cd ts && ../node_modules/typescript/bin/tsc --noEmit && cd - > /dev/null",
-    "build": "npm run build:prepare && npm run dts && npm run build:esm && npm run build:cjs && npm run build:copy_static",
+    "build": "npm run build:prepare && npm run dts && npm run build:build && npm run build:copy_static",
     "build:prepare": "rm -rf ./target && rm -rf ./dist && mkdir ./target",
-    "build:esm": "./node_modules/.bin/parcel build --target release_esm --no-cache && mkdir target/esm && cp ./dist/release_esm/ribcage.js ./target/esm/ribcage.mjs && cp ./dist/release_esm/ribcage.js.map ./target/esm/ribcage.mjs.map",
-    "build:cjs": "./node_modules/.bin/parcel build --target release_cjs --no-cache && mkdir target/cjs && cp ./dist/release_cjs/ribcage.js ./target/cjs/ribcage.cjs && cp ./dist/release_cjs/ribcage.js.map ./target/cjs/ribcage.cjs.map",
+    "build:build": "./node_modules/.bin/parcel build --target release --no-cache && cp ./dist/release/* ./target/",
     "build:copy_static": "cp ./LICENSE ./target/ && cp ./README.md ./target && npm run build:cut_package",
     "build:cut_package": "./node_modules/.bin/package-cutter --output ./target/package.json",
     "pub": "npm run test && npm run build && npm run pub:publish",
@@ -39,7 +34,7 @@
   },
   "homepage": "https://github.com/nartallax/ribcage#readme",
   "devDependencies": {
-    "@nartallax/clamsensor": "^2.0.8",
+    "@nartallax/clamsensor": "^2.0.10",
     "@nartallax/package-cutter": "^1.0.2",
     "@parcel/packager-ts": "^2.8.3",
     "@parcel/plugin": "^2.8.3",
@@ -61,16 +56,10 @@
       "optimize": false,
       "outputFormat": "esmodule"
     },
-    "release_esm": {
+    "release": {
       "source": "./ts/src/ribcage.ts",
       "isLibrary": true,
       "outputFormat": "esmodule",
-      "optimize": true
-    },
-    "release_cjs": {
-      "source": "./ts/src/ribcage.ts",
-      "isLibrary": true,
-      "outputFormat": "commonjs",
       "optimize": true
     }
   }
