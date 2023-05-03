@@ -109,6 +109,7 @@ export function rcStructFields<N extends C, R extends C, O extends C, OD extends
 
 export function rcOpt<V extends RC.Unknown>(defaultVariant: RC.OptionalDefaultValueVariant, nestedType: V): RC.OptField<V> {
 	return {
+		value: nestedType,
 		type: "optional",
 		defaultVariant: defaultVariant,
 		getValue: defaultVariant === "none" ? () => undefined : nestedType.getValue as () => RC.Value<V>
@@ -117,6 +118,7 @@ export function rcOpt<V extends RC.Unknown>(defaultVariant: RC.OptionalDefaultVa
 
 export function rcRo<T extends RC.Unknown>(nestedType: T): RC.RoField<T> {
 	return {
+		value: nestedType,
 		type: "readonly",
 		getValue: nestedType.getValue as () => RC.Value<T>
 	}
@@ -124,6 +126,7 @@ export function rcRo<T extends RC.Unknown>(nestedType: T): RC.RoField<T> {
 
 export function rcRoOpt<V extends RC.Unknown>(defaultVariant: RC.OptionalDefaultValueVariant, nestedType: V): RC.RoOptField<V> {
 	return {
+		value: nestedType,
 		defaultVariant,
 		type: "readonly_optional",
 		getValue: defaultVariant === "none" ? () => undefined : nestedType.getValue as () => RC.Value<V>

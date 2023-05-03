@@ -179,8 +179,8 @@ export namespace RC {
 
 
 	export type OptionalDefaultValueVariant = "none" | "value"
-	export interface OptField<V extends Unknown = Any> extends Type<"optional", {defaultVariant: OptionalDefaultValueVariant}, Value<V> | undefined>{}
-	export interface RoField<V extends Unknown = Any> extends Type<"readonly", {type: "readonly"}, Value<V>>{}
-	export interface RoOptField<V extends Unknown = Any> extends Type<"readonly_optional", {defaultVariant: OptionalDefaultValueVariant}, Value<V> | undefined>{}
+	export interface OptField<V extends Unknown = Any> extends Type<"optional", {defaultVariant: OptionalDefaultValueVariant, value: V}, Value<V> | undefined>{}
+	export interface RoField<V extends Unknown = Any> extends Type<"readonly", {value: V}, Value<V>>{}
+	export interface RoOptField<V extends Unknown = Any> extends Type<"readonly_optional", {defaultVariant: OptionalDefaultValueVariant, value: V}, Value<V> | undefined>{}
 	export type ObjectFieldType<V extends Unknown = Any> = V | OptField<V> | RoField<V> | RoOptField<V>
 }
