@@ -147,8 +147,8 @@ export namespace RC {
 
 
 	export interface StructDefinition extends BaseTypeDefinition {}
-	export type StructFields<T extends Unknown = AnyObjectFieldType> = {readonly [k: string]: T}
-	export interface Struct<F extends StructFields = {readonly [k: string]: Any}> extends Type<"struct", StructDefinition & {fields: Readonly<F>}, {
+	export interface StructFields<T extends Unknown = ObjectFieldType>{readonly [k: string]: T}
+	export interface Struct<F extends StructFields = StructFields> extends Type<"struct", StructDefinition & {fields: Readonly<F>}, {
 		[k in keyof F]: Value<F[k]>
 	}>{}
 	export const struct = rcStruct
@@ -179,8 +179,8 @@ export namespace RC {
 
 
 	export type OptionalDefaultValueVariant = "none" | "value"
-	export type OptField<V extends Unknown = Any> = Type<"optional", {defaultVariant: OptionalDefaultValueVariant}, Value<V> | undefined>
-	export type RoField<V extends Unknown = Any> = Type<"readonly", {type: "readonly"}, Value<V>>
-	export type RoOptField<V extends Unknown = Any> = Type<"readonly_optional", {defaultVariant: OptionalDefaultValueVariant}, Value<V> | undefined>
-	export type AnyObjectFieldType = Any | OptField | RoField | RoOptField
+	export interface OptField<V extends Unknown = Any> extends Type<"optional", {defaultVariant: OptionalDefaultValueVariant}, Value<V> | undefined>{}
+	export interface RoField<V extends Unknown = Any> extends Type<"readonly", {type: "readonly"}, Value<V>>{}
+	export interface RoOptField<V extends Unknown = Any> extends Type<"readonly_optional", {defaultVariant: OptionalDefaultValueVariant}, Value<V> | undefined>{}
+	export type ObjectFieldType<V extends Unknown = Any> = V | OptField<V> | RoField<V> | RoOptField<V>
 }
