@@ -12,6 +12,8 @@ describe("date type", () => {
 		expect(value).to.be.a(Date)
 		const check: CheckEquals<typeof value, Date> = true
 		expect(check).to.be(true)
+
+		expect(rcDate()).to.be(def)
 	})
 
 	test("can describe date type with default", () => {
@@ -21,5 +23,7 @@ describe("date type", () => {
 		expect(value).to.be.a(Date)
 		const check: CheckEquals<typeof value, Date> = true
 		expect(check).to.be(true)
+
+		expect(rcDate()).not.to.be(def)
 	})
 })

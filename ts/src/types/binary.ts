@@ -1,6 +1,13 @@
 import type {RC} from "src/ribcage"
 
-export function rcBinary(def: RC.BinaryDefinition = {}): RC.Binary {
+const noOpt = {}
+let defaultBinary: RC.Binary | null = null
+
+export function rcBinary(def: RC.BinaryDefinition = noOpt): RC.Binary {
+	if(def === noOpt){
+		return defaultBinary ??= rcBinary({})
+	}
+
 	return {
 		...def,
 		type: "binary",

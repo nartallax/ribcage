@@ -11,6 +11,8 @@ describe("primitive types", () => {
 		expect(value).to.be("")
 		const check: CheckEquals<typeof value, string> = true
 		expect(check).to.be(true)
+
+		expect(rcString()).to.be(rcString())
 	})
 
 	test("can define string with default", () => {
@@ -19,6 +21,8 @@ describe("primitive types", () => {
 		expect(value).to.be("nya")
 		const check: CheckEquals<typeof value, string> = true
 		expect(check).to.be(true)
+
+		expect(rcString({default: "nya"})).to.not.be(def)
 	})
 
 	test("can define number", () => {
@@ -27,6 +31,8 @@ describe("primitive types", () => {
 		expect(value).to.be(0)
 		const check: CheckEquals<typeof value, number> = true
 		expect(check).to.be(true)
+
+		expect(rcNumber()).to.be(rcNumber())
 	})
 
 	test("can define number with default", () => {
@@ -35,6 +41,8 @@ describe("primitive types", () => {
 		expect(value).to.be(0.5)
 		const check: CheckEquals<typeof value, number> = true
 		expect(check).to.be(true)
+
+		expect(rcNumber({default: 0.5})).to.not.be(def)
 	})
 
 	test("can define int", () => {
@@ -43,6 +51,8 @@ describe("primitive types", () => {
 		expect(value).to.be(0)
 		const check: CheckEquals<typeof value, number> = true
 		expect(check).to.be(true)
+
+		expect(rcInt()).to.be(rcInt())
 	})
 
 	test("can define int with default", () => {
@@ -51,6 +61,8 @@ describe("primitive types", () => {
 		expect(value).to.be(10)
 		const check: CheckEquals<typeof value, number> = true
 		expect(check).to.be(true)
+
+		expect(rcInt({default: 10})).to.not.be(def)
 	})
 
 	test("cannot define int with fractional default", () => {
@@ -63,6 +75,8 @@ describe("primitive types", () => {
 		expect(value).to.be(false)
 		const check: CheckEquals<typeof value, boolean> = true
 		expect(check).to.be(true)
+
+		expect(rcBool()).to.be(rcBool())
 	})
 
 	test("can define boolean with default", () => {
@@ -71,5 +85,7 @@ describe("primitive types", () => {
 		expect(value).to.be(true)
 		const check: CheckEquals<typeof value, boolean> = true
 		expect(check).to.be(true)
+
+		expect(rcBool({default: true})).to.not.be(def)
 	})
 })

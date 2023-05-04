@@ -8,6 +8,8 @@ describe("binary type", () => {
 		const value = def.getValue()
 		expect(value.length).to.be(0)
 		expect(value).to.be.an(Uint8Array)
+
+		expect(rcBinary()).to.be(def)
 	})
 
 	test("describes simple byte array with default", () => {
@@ -18,5 +20,7 @@ describe("binary type", () => {
 		const valueB = def.getValue()
 		expect(valueA).to.eql(valueB)
 		expect(valueA).to.not.be(valueB)
+
+		expect(rcBinary({getDefault: () => new Uint8Array()})).to.not.be(def)
 	})
 })

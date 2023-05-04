@@ -150,7 +150,7 @@ export namespace RC {
 	export const set = rcSet
 
 
-	export type StructValue<F extends StructFields> = { [k in keyof F]: Value<F[k]> }
+	export type StructValue<F extends StructFields> = {[k in keyof F]: Value<F[k]>}
 	export interface StructDefinition<F extends StructFields> extends BaseTypeDefinition {
 		getDefault?: () => StructValue<F>
 	}
@@ -189,7 +189,7 @@ export namespace RC {
 	// this is unfortunate way of fighting contravariance
 	// (case: validators array on definition)
 	// shouldn't be too much of a problem anyway, it will only be noticeable when writing libraries
-	// eslint-disable-next-line @typescript-eslint/ban-types
+	// eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
 	export type Any = Array | RoArray | Binary | ClassInstance<any> | Date | Constant | Intersection | Map | ObjectMap | String | Number | Int | Bool | Set | Struct<any> | Tuple | Union | Recursive
 
 

@@ -11,5 +11,8 @@ describe("constant type", () => {
 		expect(v).to.be(5)
 		const check: IfEquals<typeof v, 5, string, number> = "owo"
 		expect(check).to.be("owo")
+
+		expect(rcConstant(5)).to.be(def)
+		expect(rcConstant(6)).to.not.be(def)
 	})
 })

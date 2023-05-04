@@ -1,6 +1,13 @@
 import type {RC} from "src/ribcage"
 
-export function rcDate(def: RC.DateDefinition = {}): RC.Date {
+const noOpt = {}
+
+let defaultDate: RC.Date | null = null
+export function rcDate(def: RC.DateDefinition = noOpt): RC.Date {
+	if(def === noOpt){
+		return defaultDate ??= rcDate({})
+	}
+
 	return {
 		...def,
 		type: "date",
