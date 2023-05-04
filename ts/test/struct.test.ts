@@ -1,5 +1,6 @@
 import {describe, test} from "@nartallax/clamsensor"
 import expect from "expect.js"
+import {RC} from "src/ribcage"
 import {rcInt, rcNumber} from "src/types/primitive"
 import {rcStruct} from "src/types/struct"
 import {rcStructFields} from "src/types/struct_fields"
@@ -73,5 +74,10 @@ describe("struct type", () => {
 		expect(instanceA).to.eql(instanceB)
 		expect(instanceA).to.not.be(instanceB)
 	})
+
+	// test: struct is not contravariant
+	// if it is - this will be a type error
+	const someStruct: RC.Any = rcStruct({x: RC.number()})
+	void someStruct
 
 })

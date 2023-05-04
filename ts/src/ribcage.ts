@@ -150,13 +150,14 @@ export namespace RC {
 	export const set = rcSet
 
 
+	export type StructValue<F extends StructFields> = { [k in keyof F]: Value<F[k]> }
 	export interface StructDefinition<F extends StructFields> extends BaseTypeDefinition {
-		getDefault?: () => { [k in keyof F]: Value<F[k]> }
+		getDefault?: () => StructValue<F>
 	}
-	export interface StructFields<T extends Unknown = ObjectFieldType>{readonly [k: string]: T}
-	export interface Struct<F extends StructFields = StructFields> extends Type<"struct", StructDefinition<F> & {fields: Readonly<F>}, {
-		[k in keyof F]: Value<F[k]>
-	}>{}
+	export type StructFields<T extends ObjectFieldType = ObjectFieldType> = {readonly [k: string]: T}
+	export interface Struct<F extends StructFields = StructFields> extends Type<"struct", StructDefinition<F> & {
+		fields: Readonly<F>
+	}, StructValue<F>>{}
 	export const struct = rcStruct
 	export const structFields = rcStructFields
 
@@ -184,8 +185,12 @@ export namespace RC {
 
 
 	/** A type union of all the types defined by this library */
+	// ClassInstance and Struct here are destined to have `any` as generic parameters
+	// this is unfortunate way of fighting contravariance
+	// (case: validators array on definition)
+	// shouldn't be too much of a problem anyway, it will only be noticeable when writing libraries
 	// eslint-disable-next-line @typescript-eslint/ban-types
-	export type Any = Array | RoArray | Binary | ClassInstance | Date | Constant | Intersection | Map | ObjectMap | String | Number | Int | Bool | Set | Struct | Tuple | Union | Recursive
+	export type Any = Array | RoArray | Binary | ClassInstance<any> | Date | Constant | Intersection | Map | ObjectMap | String | Number | Int | Bool | Set | Struct<any> | Tuple | Union | Recursive
 
 
 	export type OptionalDefaultValueVariant = "none" | "value"

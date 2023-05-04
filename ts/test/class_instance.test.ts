@@ -46,4 +46,9 @@ describe("class instance type", () => {
 		expect(check).to.be(true)
 		expect(value).to.not.be(def.getValue())
 	})
+
+	// test: class is not contravariant
+	// if it is - this will be a type error
+	const someClass: RC.Any = rcClassInstance({cls: OneArgClass})
+	void someClass
 })
