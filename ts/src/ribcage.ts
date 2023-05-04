@@ -150,14 +150,17 @@ export namespace RC {
 	export const set = rcSet
 
 
-	export type StructValue<F extends StructFields> = {[k in keyof F]: Value<F[k]>}
 	export interface StructDefinition<F extends StructFields> extends BaseTypeDefinition {
-		getDefault?: () => StructValue<F>
+		getDefault?: () => {[k in keyof F]: Value<F[k]>}
 	}
 	export type StructFields<T extends ObjectFieldType = ObjectFieldType> = {readonly [k: string]: T}
+	// it may be very tempting to just extract value of struct into its own type
+	// but, by doing that, we'll break some of delicate parts of typescript devserver
+	// which will lead to less elegant display of resulting type in hint
+	// (like `{x: number}` vs `RC.StructType<{x: RC.Number}>`)
 	export interface Struct<F extends StructFields = StructFields> extends Type<"struct", StructDefinition<F> & {
 		fields: Readonly<F>
-	}, StructValue<F>>{}
+	}, {[k in keyof F]: Value<F[k]>}>{}
 	export const struct = rcStruct
 	export const structFields = rcStructFields
 
