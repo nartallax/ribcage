@@ -74,8 +74,12 @@ export namespace RC {
 	/** A type of value that can be a constant */
 	export type Constantable = string | number | boolean | null | undefined
 	// TODO: const T here..?
-	export interface ConstantDefinition extends BaseTypeDefinition {}
-	export interface Constant<T extends Constantable = Constantable> extends Type<"constant", ConstantDefinition & {value: T}, T> {}
+	export interface ConstantDefinition<T extends Constantable> extends BaseTypeDefinition {
+		// this property doesn't make much sense on its own, and passing it won't do much
+		// this property mostly exists to add generic type to the interface, for other libraries to use
+		value?: T
+	}
+	export interface Constant<T extends Constantable = Constantable> extends Type<"constant", ConstantDefinition<T> & {value: T}, T> {}
 	export const constant = rcConstant
 
 
@@ -146,25 +150,31 @@ export namespace RC {
 	export const set = rcSet
 
 
-	export interface StructDefinition extends BaseTypeDefinition {}
+	export interface StructDefinition<F extends StructFields> extends BaseTypeDefinition {
+		getDefault?: () => { [k in keyof F]: Value<F[k]> }
+	}
 	export interface StructFields<T extends Unknown = ObjectFieldType>{readonly [k: string]: T}
-	export interface Struct<F extends StructFields = StructFields> extends Type<"struct", StructDefinition & {fields: Readonly<F>}, {
+	export interface Struct<F extends StructFields = StructFields> extends Type<"struct", StructDefinition<F> & {fields: Readonly<F>}, {
 		[k in keyof F]: Value<F[k]>
 	}>{}
 	export const struct = rcStruct
 	export const structFields = rcStructFields
 
 
-	export interface TupleDefinition extends BaseTypeDefinition {}
+	export interface TupleDefinition<T extends readonly Unknown[]> extends BaseTypeDefinition {
+		getDefault?: () => TupleValue<T>
+	}
 	export type TupleValue<T extends readonly Unknown[]> = T extends readonly [infer V extends Unknown, ...(infer R extends readonly Unknown[])]
 		? [Value<V>, ...TupleValue<R>]
 		: []
-	export interface Tuple<T extends readonly Unknown[] = readonly Any[]> extends Type<"tuple", TupleDefinition & {components: T}, TupleValue<T>>{}
+	export interface Tuple<T extends readonly Unknown[] = readonly Any[]> extends Type<"tuple", TupleDefinition<T> & {components: T}, TupleValue<T>>{}
 	export const tuple = rcTuple
 
 
-	export interface UnionDefinition extends BaseTypeDefinition {}
-	export interface Union<T extends Unknown = Any> extends Type<"union", UnionDefinition & {components: T[]}, Value<T>>{}
+	export interface UnionDefinition<T extends Unknown> extends BaseTypeDefinition {
+		getDefault?: () => Value<T>
+	}
+	export interface Union<T extends Unknown = Any> extends Type<"union", UnionDefinition<T> & {components: T[]}, Value<T>>{}
 	export const union = rcUnion
 
 
