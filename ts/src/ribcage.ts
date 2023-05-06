@@ -10,7 +10,7 @@ import {rcObjectMap} from "src/types/object_map"
 import {rcBool, rcInt, rcNumber, rcString} from "src/types/primitive"
 import {rcRecursiveType} from "src/types/recursive"
 import {rcSet} from "src/types/set"
-import {rcStruct} from "src/types/struct"
+import {rcRoStruct, rcStruct} from "src/types/struct"
 import {rcStructFields} from "src/types/struct_fields"
 import {rcTuple} from "src/types/tuple"
 import {rcUnion} from "src/types/union"
@@ -164,6 +164,7 @@ export namespace RC {
 	}, {[k in keyof F]: Value<F[k]>}>{}
 	export const struct = rcStruct
 	export const structFields = rcStructFields
+	export const roStruct = rcRoStruct
 
 
 	export interface TupleDefinition<T extends readonly Unknown[]> extends BaseTypeDefinition {

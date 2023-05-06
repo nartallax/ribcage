@@ -1,8 +1,8 @@
 import {describe, test} from "@nartallax/clamsensor"
 import expect from "expect.js"
-import {RC} from "src/ribcage"
+import type {RC} from "src/ribcage"
 import {rcInt, rcNumber} from "src/types/primitive"
-import {rcStruct} from "src/types/struct"
+import {rcRoStruct, rcStruct} from "src/types/struct"
 import {rcStructFields} from "src/types/struct_fields"
 
 type IsOptFields<T, IfTrue, IfFalse> = Partial<T> extends T ? IfTrue : IfFalse
@@ -77,7 +77,16 @@ describe("struct type", () => {
 
 	// test: struct is not contravariant
 	// if it is - this will be a type error
-	const someStruct: RC.Any = rcStruct({x: RC.number()})
+	const someStruct: RC.Any = rcStruct({x: rcNumber()})
 	void someStruct
+
+	test("can declare readonly struct with shorthand", () => {
+		const def = rcRoStruct({
+			x: rcNumber(),
+			y: rcNumber()
+		})
+		const value = def.getValue()
+		expect(value).to.eql({x: 0, y: 0})
+	})
 
 })
