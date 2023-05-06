@@ -32,10 +32,10 @@ describe("intersection type", () => {
 
 	test("can declare intersections of strings with default", () => {
 		// doesn't make much sense, but should work anyway
-		const def = rcIntersection({getDefault: () => "owo" as const}, [
+		const def = rcIntersection([
 			rcConstant("owo" as const),
 			rcString()
-		])
+		], {getDefault: () => "owo" as const})
 		expect(def.getValue()).to.be("owo")
 	})
 

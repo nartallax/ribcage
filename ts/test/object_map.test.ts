@@ -9,9 +9,7 @@ type CheckEquals<A, B> = A extends B ? B extends A ? true : false : false
 
 describe("object_map type", () => {
 	test("defines object map", () => {
-		const def = rcObjectMap({
-			value: rcInt()
-		})
+		const def = rcObjectMap(rcInt())
 		const value = def.getValue()
 		expect(value).to.eql({})
 		const check: CheckEquals<typeof value, Record<string, number>> = true
@@ -19,8 +17,7 @@ describe("object_map type", () => {
 	})
 
 	test("defines object map with default", () => {
-		const def = rcObjectMap({
-			value: rcInt(),
+		const def = rcObjectMap(rcInt(), {
 			getDefault: () => ({ayaya: 15})
 		})
 		const value = def.getValue()
@@ -30,9 +27,8 @@ describe("object_map type", () => {
 	})
 
 	test("defines mapped type", () => {
-		const def = rcObjectMap({
-			key: rcUnion([rcConstant("uwu" as const), rcConstant("owo" as const)]),
-			value: rcInt({default: 5})
+		const def = rcObjectMap(rcInt({default: 5}), {
+			key: rcUnion([rcConstant("uwu" as const), rcConstant("owo" as const)])
 		})
 		const value = def.getValue()
 		expect(value).to.eql({uwu: 5, owo: 5})
@@ -42,9 +38,8 @@ describe("object_map type", () => {
 
 	test("defines mapped type with single key", () => {
 		// why would anyone do that lol, that's just a struct
-		const def = rcObjectMap({
-			key: rcConstant("uwu" as const),
-			value: rcInt({default: 6})
+		const def = rcObjectMap(rcInt({default: 6}), {
+			key: rcConstant("uwu" as const)
 		})
 		const value = def.getValue()
 		expect(value).to.eql({uwu: 6})

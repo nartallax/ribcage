@@ -21,7 +21,7 @@ describe("class instance type", () => {
 	}
 
 	test("can define simple class instance type", () => {
-		const def = rcClassInstance({cls: ZeroArgClass})
+		const def = rcClassInstance(ZeroArgClass)
 		const value = def.getValue()
 		expect(value).to.eql(new ZeroArgClass())
 		expect(value).to.be.a(ZeroArgClass)
@@ -31,14 +31,14 @@ describe("class instance type", () => {
 	})
 
 	test("can define class instance type when class constructor has parameters", () => {
-		const def = rcClassInstance({cls: OneArgClass})
+		const def = rcClassInstance(OneArgClass)
 		expect(def.getValue).throwError(/constructor expects more than zero arguments/)
 		const check: CheckEquals<RC.Value<typeof def>, OneArgClass> = true
 		expect(check).to.be(true)
 	})
 
 	test("can define class instance type when class constructor has parameters with default value", () => {
-		const def = rcClassInstance({cls: OneArgClass, getDefault: () => new OneArgClass(10)})
+		const def = rcClassInstance(OneArgClass, {getDefault: () => new OneArgClass(10)})
 		const value = def.getValue()
 		expect(value).to.eql(new OneArgClass(10))
 		expect(value).to.be.a(OneArgClass)
@@ -49,6 +49,6 @@ describe("class instance type", () => {
 
 	// test: class is not contravariant
 	// if it is - this will be a type error
-	const someClass: RC.Any = rcClassInstance({cls: OneArgClass})
+	const someClass: RC.Any = rcClassInstance(OneArgClass)
 	void someClass
 })

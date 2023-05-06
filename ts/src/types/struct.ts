@@ -1,14 +1,10 @@
+import {emptyObject} from "src/empty_object"
 import type {RC} from "src/ribcage"
-import {resolveTwoArguments} from "src/types/base"
 
 // TODO: const F here..?
 /** Struct is an object with fixed set of fields
  * (as opposed to object-map which fields can be determined at runtime) */
-export function rcStruct<F extends RC.StructFields>(base: RC.StructDefinition<F>, fields: F): RC.Struct<F>
-export function rcStruct<F extends RC.StructFields>(fields: F): RC.Struct<F>
-export function rcStruct<F extends RC.StructFields>(a: RC.StructDefinition<F> | F, b?: F): RC.Struct<F> {
-	const [def, fields] = resolveTwoArguments<RC.StructDefinition<F>, F>(a, b, {})
-
+export function rcStruct<F extends RC.StructFields>(fields: F, def: RC.StructDefinition<F> = emptyObject): RC.Struct<F> {
 	return {
 		...def,
 		type: "struct",

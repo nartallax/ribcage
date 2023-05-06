@@ -62,13 +62,15 @@ export namespace RC {
 	export const binary = rcBinary
 
 
-	export interface ClassInstanceDefinition<C> extends BaseTypeDefinition {
+	export interface AnyConstructor<C>{
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		cls: {new(...args: any[]): C}
+		new(...args: any[]): C
+	}
+	export interface ClassInstanceDefinition<C> extends BaseTypeDefinition {
 		getDefault?: () => C
 	}
-	export interface ClassInstance<C = unknown> extends Type<"class_instance", ClassInstanceDefinition<C>, C> {}
-	export const classInstance = rcClassInstance
+	export interface ClassInstance<C = unknown> extends Type<"class_instance", ClassInstanceDefinition<C> & {cls: AnyConstructor<C>}, C> {}
+	export const instance = rcClassInstance
 
 
 	/** A type of value that can be a constant */
@@ -110,10 +112,9 @@ export namespace RC {
 	export type ObjectMapValue<K extends ObjectMapKeyType, V extends Unknown> = Record<Value<K>, Value<V>>
 	export interface ObjectMapDefinition<V extends Unknown, K extends ObjectMapKeyType> extends BaseTypeDefinition {
 		key?: K
-		value: V
 		getDefault?: () => ObjectMapValue<K, V>
 	}
-	export interface ObjectMap<K extends ObjectMapKeyType = ObjectMapKeyType, V extends Unknown = Any> extends Type<"object_map", ObjectMapDefinition<V, K> & {key: K}, ObjectMapValue<K, V>> {}
+	export interface ObjectMap<K extends ObjectMapKeyType = ObjectMapKeyType, V extends Unknown = Any> extends Type<"object_map", ObjectMapDefinition<V, K> & {key: K, value: V}, ObjectMapValue<K, V>> {}
 	export const objectMap = rcObjectMap
 
 

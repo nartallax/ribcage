@@ -1,11 +1,7 @@
+import {emptyObject} from "src/empty_object"
 import type {RC} from "src/ribcage"
-import {resolveTwoArguments} from "src/types/base"
 
-export function rcRecursiveType(base: RC.RecursiveTypeDefinition, getType: () => RC.Unknown): RC.Recursive
-export function rcRecursiveType(getType: () => RC.Unknown): RC.Recursive
-export function rcRecursiveType(a: RC.RecursiveTypeDefinition | (() => RC.Unknown), b?: () => RC.Unknown): RC.Recursive {
-	const [def, getType] = resolveTwoArguments<RC.RecursiveTypeDefinition, () => RC.Unknown>(a, b, {})
-
+export function rcRecursiveType(getType: () => RC.Unknown, def: RC.RecursiveTypeDefinition = emptyObject): RC.Recursive {
 	return {
 		...def,
 		type: "recursive",

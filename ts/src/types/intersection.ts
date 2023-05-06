@@ -1,5 +1,5 @@
+import {emptyObject} from "src/empty_object"
 import type {RC} from "src/ribcage"
-import {resolveTwoArguments} from "src/types/base"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never
@@ -17,11 +17,7 @@ export type DefUnionToTypeIntersection<T extends RC.Unknown> = [T] extends [RCPr
 	? UnpackUnion<UnionToIntersection<PackedTypeUnion<T>>>
 	: UnionToIntersection<RC.Value<T>>
 
-export function rcIntersection<T extends RC.Unknown>(base: RC.IntersectionDefinition<T>, components: T[]): RC.Intersection<T>
-export function rcIntersection<T extends RC.Unknown>(components: T[]): RC.Intersection<T>
-export function rcIntersection<T extends RC.Unknown>(a: RC.IntersectionDefinition<T> | T[], b?: T[]): RC.Intersection<T> {
-	const [def, components] = resolveTwoArguments<RC.IntersectionDefinition<T>, T[]>(a, b, {})
-
+export function rcIntersection<T extends RC.Unknown>(components: T[], def: RC.IntersectionDefinition<T> = emptyObject): RC.Intersection<T> {
 	if(components.length < 1){
 		throw new Error("Cannot create intersection type of zero components.")
 	}

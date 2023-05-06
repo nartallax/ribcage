@@ -1,11 +1,13 @@
+import {emptyObject} from "src/empty_object"
 import type {RC} from "src/ribcage"
 import {rcString} from "src/types/primitive"
 
 /** object-map is an object used as a map */
-export function rcObjectMap<V extends RC.Unknown, K extends RC.ObjectMapKeyType = RC.String>(def: RC.ObjectMapDefinition<V, K>): RC.ObjectMap<K, V> {
+export function rcObjectMap<V extends RC.Unknown, K extends RC.ObjectMapKeyType = RC.String>(value: V, def: RC.ObjectMapDefinition<V, K> = emptyObject): RC.ObjectMap<K, V> {
 	const key = def.key ?? rcString() as K
 	return {
 		...def,
+		value,
 		key,
 		type: "object_map",
 		getValue: def.getDefault ?? (() => {
@@ -14,22 +16,22 @@ export function rcObjectMap<V extends RC.Unknown, K extends RC.ObjectMapKeyType 
 			if(key.type === "string"){
 				return result
 			} else if(key.type === "constant"){
-				const value = key.getValue()
-				if(typeof(value) !== "string"){
-					throw new Error("Unexpected key of object map (non-string): " + value)
+				const keyValue = key.getValue()
+				if(typeof(keyValue) !== "string"){
+					throw new Error("Unexpected key of object map (non-string): " + keyValue)
 				}
-				result[value] = def.value.getValue()
+				result[keyValue] = value.getValue()
 			} else if(key.type === "union"){
 				const stringType = key.components.find(x => x.type === "string")
 				if(stringType){
 					return result
 				}
 				for(const item of key.components){
-					const value = item.getValue()
-					if(typeof(value) !== "string"){
-						throw new Error("Unexpected key of object map (non-string): " + value)
+					const keyValue = item.getValue()
+					if(typeof(keyValue) !== "string"){
+						throw new Error("Unexpected key of object map (non-string): " + keyValue)
 					}
-					result[value] = def.value.getValue()
+					result[keyValue] = value.getValue()
 				}
 			}
 			return result

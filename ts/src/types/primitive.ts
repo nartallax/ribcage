@@ -1,10 +1,9 @@
+import {emptyObject} from "src/empty_object"
 import type {RC} from "src/ribcage"
 
-const noOpts = {}
-
 let defaultString: RC.String | null = null
-export function rcString(def: RC.StringDefiniton = noOpts): RC.String {
-	if(def === noOpts){
+export function rcString(def: RC.StringDefiniton = emptyObject): RC.String {
+	if(def === emptyObject){
 		return defaultString ??= rcString({})
 	}
 
@@ -18,8 +17,8 @@ export function rcString(def: RC.StringDefiniton = noOpts): RC.String {
 }
 
 let defaultNumber: RC.Number | null = null
-export function rcNumber(def: RC.NumberDefinition = noOpts): RC.Number {
-	if(def === noOpts){
+export function rcNumber(def: RC.NumberDefinition = emptyObject): RC.Number {
+	if(def === emptyObject){
 		return defaultNumber ??= rcNumber({})
 	}
 
@@ -33,8 +32,8 @@ export function rcNumber(def: RC.NumberDefinition = noOpts): RC.Number {
 }
 
 let defaultInt: RC.Int | null = null
-export function rcInt(def: RC.IntDefinition = noOpts): RC.Int {
-	if(def === noOpts){
+export function rcInt(def: RC.IntDefinition = emptyObject): RC.Int {
+	if(def === emptyObject){
 		return defaultInt ??= rcInt({})
 	}
 
@@ -51,8 +50,8 @@ export function rcInt(def: RC.IntDefinition = noOpts): RC.Int {
 }
 
 let defaultBool: RC.Bool | null = null
-export function rcBool(def: RC.BoolDefinition = noOpts): RC.Bool {
-	if(def === noOpts){
+export function rcBool(def: RC.BoolDefinition = emptyObject): RC.Bool {
+	if(def === emptyObject){
 		return defaultBool ??= rcBool({})
 	}
 

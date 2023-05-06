@@ -15,7 +15,7 @@ describe("array type", () => {
 	})
 
 	test("array type can take default", () => {
-		const arr = rcArray({getDefault: () => [1, 2, 3]}, rcInt())
+		const arr = rcArray(rcInt(), {getDefault: () => [1, 2, 3]})
 		const instance: number[] = arr.getValue()
 		expect(instance).to.eql([1, 2, 3])
 	})
@@ -29,7 +29,7 @@ describe("array type", () => {
 	})
 
 	test("readonly array can take default", () => {
-		const arr = rcRoArray({getDefault: () => ["uwu", "owo"]}, rcString())
+		const arr = rcRoArray(rcString(), {getDefault: () => ["uwu", "owo"]})
 		const instance = arr.getValue()
 		expect(instance).to.eql(["uwu", "owo"])
 		const checkValue: IsRoArray<typeof instance, string, number> = "uwu"

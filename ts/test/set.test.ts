@@ -17,7 +17,7 @@ describe("set type", () => {
 	})
 
 	test("can declare simple set with default", () => {
-		const def = rcSet({getDefault: () => new Set([1, 2, 5])}, rcInt())
+		const def = rcSet(rcInt(), {getDefault: () => new Set([1, 2, 5])})
 		const value = def.getValue()
 		expect(value).to.eql(new Set([1, 2, 5]))
 		expect(value).to.be.a(Set)
