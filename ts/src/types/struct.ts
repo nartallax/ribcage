@@ -25,4 +25,4 @@ export function rcStruct<F extends RC.StructFields>(fields: F, def: RC.StructDef
 	}
 }
 
-export const rcRoStruct: <F extends RC.StructFields>(fields: F, def?: RC.StructDefinition<F>) => Readonly<RC.Struct<F>> = rcStruct
+export const rcRoStruct: <F extends RC.StructFields>(fields: F, def?: RC.StructDefinition<F>) => RC.RoStruct<F> = rcStruct

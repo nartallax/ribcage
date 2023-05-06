@@ -162,6 +162,9 @@ export namespace RC {
 	export interface Struct<F extends StructFields = StructFields> extends Type<"struct", StructDefinition<F> & {
 		fields: Readonly<F>
 	}, {[k in keyof F]: Value<F[k]>}>{}
+	export interface RoStruct<F extends StructFields = StructFields> extends Type<"struct", StructDefinition<F> & {
+		fields: Readonly<F>
+	}, {readonly [k in keyof F]: Value<F[k]>}>{}
 	export const struct = rcStruct
 	export const structFields = rcStructFields
 	export const roStruct = rcRoStruct
