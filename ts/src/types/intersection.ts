@@ -1,9 +1,6 @@
 import {emptyObject} from "src/empty_object"
 import type {RC} from "src/ribcage"
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never
-
 // this type exists to avoid collapsing types like `"uwu" | string` into just `string`
 // because that would lead to incorrect conversion to intersection type (`string` instead of `"uwu"`)
 type PackedTypeUnion<T> = T extends RC.Unknown ? [RC.Value<T>] : never
@@ -14,8 +11,8 @@ type RCPrimitive = RC.String | RC.Int | RC.Number | RC.Bool | RC.Constant<RC.Con
  * Intersection of primitives = most narrow type of them
  * Intersection of objects = object with all the fields */
 export type DefUnionToTypeIntersection<T extends RC.Unknown> = [T] extends [RCPrimitive]
-	? UnpackUnion<UnionToIntersection<PackedTypeUnion<T>>>
-	: UnionToIntersection<RC.Value<T>>
+	? UnpackUnion<RC.UnionToIntersection<PackedTypeUnion<T>>>
+	: RC.UnionToIntersection<RC.Value<T>>
 
 export function rcIntersection<T extends RC.Unknown>(components: T[], def: RC.IntersectionDefinition<T> = emptyObject): RC.Intersection<T> {
 	if(components.length < 1){
@@ -27,7 +24,6 @@ export function rcIntersection<T extends RC.Unknown>(components: T[], def: RC.In
 		type: "intersection",
 		components,
 		getValue: def.getDefault ? def.getDefault : () => {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			let result: any = {}
 			for(const component of components){
 				const value = component.getValue()

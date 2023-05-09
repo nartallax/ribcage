@@ -1,11 +1,12 @@
 import {describe, test} from "@nartallax/clamsensor"
 import expect from "expect.js"
-import type {RC} from "src/ribcage"
+import {RC} from "src/ribcage"
 import {rcInt, rcNumber} from "src/types/primitive"
 import {rcRoStruct, rcStruct} from "src/types/struct"
 import {rcStructFields} from "src/types/struct_fields"
 
 type IsOptFields<T, IfTrue, IfFalse> = Partial<T> extends T ? IfTrue : IfFalse
+type CheckEquals<A, B> = A extends B ? B extends A ? true : false : false
 
 describe("struct type", () => {
 	test("can declare simple struct", () => {
@@ -87,6 +88,40 @@ describe("struct type", () => {
 		})
 		const value = def.getValue()
 		expect(value).to.eql({x: 0, y: 0})
+	})
+
+	test("struct can extend", () => {
+		const Point2d = rcStruct({x: RC.number(), y: RC.number()})
+		const Point3d = rcStruct({z: RC.number()}, {}, Point2d)
+		const value = Point3d.getValue()
+		expect(value).to.eql({x: 0, y: 0, z: 0})
+		const check: CheckEquals<typeof value, {x: number, y: number, z: number}> = true
+		expect(check).to.be(true)
+	})
+
+	test("struct can extend opt/ro/roopt", () => {
+		const Point2d = rcStruct(rcStructFields({
+			opt: {x: RC.number()},
+			ro: {y: RC.number()},
+			roOpt: {q: RC.number()}
+		}))
+		const Point3D = rcStruct({
+			z: RC.number()
+		}, {}, Point2d)
+		const value = Point3D.getValue()
+		expect(value).to.eql({y: 0, z: 0})
+		const check: CheckEquals<typeof value, {x?: number, y: number, z: number, q?: number}> = true
+		expect(check).to.be(true)
+	})
+
+	test("struct can extend more than one", () => {
+		const X = rcStruct({x: RC.number()})
+		const Y = rcStruct({y: RC.number()})
+		const Point3D = rcStruct({z: RC.number()}, {}, [X, Y])
+		const value = Point3D.getValue()
+		expect(value).to.eql({x: 0, y: 0, z: 0})
+		const check: CheckEquals<typeof value, {x: number, y: number, z: number}> = true
+		expect(check).to.be(true)
 	})
 
 })

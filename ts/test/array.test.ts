@@ -3,7 +3,6 @@ import expect from "expect.js"
 import {rcArray, rcRoArray} from "src/types/array"
 import {rcInt, rcString} from "src/types/primitive"
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type IsRoArray<T, IfTrue, IfFalse> = readonly any[] extends T ? IfTrue : IfFalse
 
 describe("array type", () => {

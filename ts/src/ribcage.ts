@@ -4,6 +4,7 @@ import {rcBinary} from "src/types/binary"
 import {rcClassInstance} from "src/types/class_instance"
 import {rcConstant} from "src/types/constant"
 import {rcDate} from "src/types/date"
+import {rcEnum} from "src/types/enum"
 import {DefUnionToTypeIntersection, rcIntersection} from "src/types/intersection"
 import {rcMap} from "src/types/map"
 import {rcObjectMap} from "src/types/object_map"
@@ -13,7 +14,7 @@ import {rcSet} from "src/types/set"
 import {rcRoStruct, rcStruct} from "src/types/struct"
 import {rcStructFields} from "src/types/struct_fields"
 import {rcTuple} from "src/types/tuple"
-import {rcUnion} from "src/types/union"
+import {rcConstUnion, rcKeyOf, rcUnion} from "src/types/union"
 
 type NativeDate = Date
 type NativeMap<K, V> = Map<K, V>
@@ -35,7 +36,6 @@ export namespace RC {
 	}
 
 	/** Type of value that some type structure is describing */
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	export type Value<T extends Unknown> = T extends Type<any, any, infer V> ? V : never
 
 	/** Some type that is not known.
@@ -63,13 +63,12 @@ export namespace RC {
 
 
 	export interface AnyConstructor<C>{
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		new(...args: any[]): C
 	}
 	export interface ClassInstanceDefinition<C> extends BaseTypeDefinition {
 		getDefault?: () => C
 	}
-	export interface ClassInstance<C = unknown> extends Type<"class_instance", ClassInstanceDefinition<C> & {cls: AnyConstructor<C>}, C> {}
+	export interface ClassInstance<C = any> extends Type<"class_instance", ClassInstanceDefinition<C> & {cls: AnyConstructor<C>}, C> {}
 	export const instance = rcClassInstance
 
 
@@ -150,19 +149,23 @@ export namespace RC {
 	export interface Set<T extends Unknown = Any> extends Type<"set", SetDefinition<T> & {value: T}, NativeSet<Value<T>>>{}
 	export const set = rcSet
 
+	export type FieldsOf<T extends Struct> = T extends Struct<infer F> ? F : never
+	export type KeyOf<T extends Struct> = keyof FieldsOf<T>
+	export type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never
 
 	export interface StructDefinition<F extends StructFields> extends BaseTypeDefinition {
 		getDefault?: () => {[k in keyof F]: Value<F[k]>}
+		extends?: readonly RC.Struct[]
 	}
 	export type StructFields<T extends ObjectFieldType = ObjectFieldType> = {readonly [k: string]: T}
 	// it may be very tempting to just extract value of struct into its own type
 	// but, by doing that, we'll break some of delicate parts of typescript devserver
 	// which will lead to less elegant display of resulting type in hint
 	// (like `{x: number}` vs `RC.StructType<{x: RC.Number}>`)
-	export interface Struct<F extends StructFields = StructFields> extends Type<"struct", StructDefinition<F> & {
+	export interface Struct<F extends StructFields = any> extends Type<"struct", StructDefinition<F> & {
 		fields: Readonly<F>
 	}, {[k in keyof F]: Value<F[k]>}>{}
-	export interface RoStruct<F extends StructFields = StructFields> extends Type<"struct", StructDefinition<F> & {
+	export interface RoStruct<F extends StructFields = any> extends Type<"struct", StructDefinition<F> & {
 		fields: Readonly<F>
 	}, {readonly [k in keyof F]: Value<F[k]>}>{}
 	export const struct = rcStruct
@@ -185,7 +188,9 @@ export namespace RC {
 	}
 	export interface Union<T extends Unknown = Any> extends Type<"union", UnionDefinition<T> & {components: T[]}, Value<T>>{}
 	export const union = rcUnion
-
+	export const constUnion = rcConstUnion
+	export const enm = rcEnum
+	export const keyOf = rcKeyOf
 
 	export interface RecursiveTypeDefinition extends BaseTypeDefinition {}
 	export interface Recursive extends Type<"recursive", RecursiveTypeDefinition & {getType: () => Unknown}, unknown>{}
@@ -193,12 +198,7 @@ export namespace RC {
 
 
 	/** A type union of all the types defined by this library */
-	// ClassInstance and Struct here are destined to have `any` as generic parameters
-	// this is unfortunate way of fighting contravariance
-	// (case: validators array on definition)
-	// shouldn't be too much of a problem anyway, it will only be noticeable when writing libraries
-	// eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
-	export type Any = Array | RoArray | Binary | ClassInstance<any> | Date | Constant | Intersection | Map | ObjectMap | String | Number | Int | Bool | Set | Struct<any> | RoStruct<any> | Tuple | Union | Recursive
+	export type Any = Array | RoArray | Binary | ClassInstance | Date | Constant | Intersection | Map | ObjectMap | String | Number | Int | Bool | Set | Struct | RoStruct | Tuple | Union | Recursive
 
 
 	export type OptionalDefaultValueVariant = "none" | "value"

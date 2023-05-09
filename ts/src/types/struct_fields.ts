@@ -84,7 +84,6 @@ export function rcStructFields<N extends C, R extends C, O extends C, OD extends
 export function rcStructFields<R extends C, O extends C, OD extends C, RO extends C, ROD extends C>(fields: RS<R> & OS<O> & ODS<OD> & ROS<RO> & RODS<ROD>): RR<R> & OR<O> & OR<OD> & ROR<RO> & ROR<ROD>
 export function rcStructFields<N extends C, R extends C, O extends C, OD extends C, RO extends C, ROD extends C>(fields: NS<N> & RS<R> & OS<O> & ODS<OD> & ROS<RO> & RODS<ROD>): NR<N> & RR<R> & OR<O> & OR<OD> & ROR<RO> & ROR<ROD>
 export function rcStructFields<N extends C, R extends C, O extends C, OD extends C, RO extends C, ROD extends C>(fields: Partial<NS<N> & RS<R> & OS<O> & ODS<OD> & ROS<RO> & RODS<ROD>>): NR<N> & RR<R> & OR<O> & OR<OD> & ROR<RO> & ROR<ROD> {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const result: any = {}
 	for(const key in fields.normal ?? {}){
 		result[key] = fields.normal![key]

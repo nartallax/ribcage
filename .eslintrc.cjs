@@ -124,6 +124,9 @@ module.exports = {
 		"@typescript-eslint/quotes": ["warn", "double"],
 		"@typescript-eslint/semi": ["warn", "never"],
 		"@typescript-eslint/space-before-function-paren": ["warn", "never"],
-		"@typescript-eslint/space-infix-ops": ["warn"]
+		"@typescript-eslint/space-infix-ops": ["warn"],
+		"@typescript-eslint/no-explicit-any": "off",
+		// just for this project, so it'll stop converting my custom String into vanilla string
+		"@typescript-eslint/ban-types": "off"
 	}
 }

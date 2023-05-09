@@ -11,7 +11,6 @@ export function rcObjectMap<V extends RC.Unknown, K extends RC.ObjectMapKeyType 
 		key,
 		type: "object_map",
 		getValue: def.getDefault ?? (() => {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const result: any = {}
 			if(key.type === "string"){
 				return result
