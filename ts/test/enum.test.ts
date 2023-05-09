@@ -17,5 +17,6 @@ describe("enums", () => {
 		// string enums don't have great typing it seems
 		const check: CheckEquals<typeof value, 5 | 10 | string> = true
 		expect(check).to.be(true)
+		expect(rcEnum(MyEnum)).to.be(def)
 	})
 })
