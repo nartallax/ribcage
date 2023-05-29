@@ -74,7 +74,6 @@ export namespace RC {
 
 	/** A type of value that can be a constant */
 	export type Constantable = string | number | boolean | null | undefined
-	// TODO: const T here..?
 	export interface ConstantDefinition<T extends Constantable> extends BaseTypeDefinition {
 		// this property doesn't make much sense on its own, and passing it won't do much
 		// this property mostly exists to add generic type to the interface, for other libraries to use

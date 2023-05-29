@@ -7,7 +7,7 @@ type CheckEquals<A, B> = A extends B ? B extends A ? true : false : false
 
 describe("tuple type", () => {
 	test("can declare simple union type", () => {
-		const def = rcTuple([rcInt({default: 7}), rcString(), rcBool()] as const)
+		const def = rcTuple([rcInt({default: 7}), rcString(), rcBool()])
 		const value = def.getValue()
 		expect(value).to.eql([7, "", false])
 		const check: CheckEquals<typeof value, [number, string, boolean]> = true

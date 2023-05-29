@@ -22,8 +22,8 @@ describe("union type", () => {
 
 	test("can declare union type of constants", () => {
 		const def = rcUnion([
-			rcConstant("owo" as const),
-			rcConstant("uwu" as const)
+			rcConstant("owo"),
+			rcConstant("uwu")
 		])
 		const value = def.getValue()
 		expect(value).to.be("owo")
@@ -35,7 +35,7 @@ describe("union type", () => {
 		// this doesn't make much sense
 		// but for extensibility purposes I'm not simplifying this to just that single type
 		// it should behave the same anyway
-		const def = rcUnion([rcConstant(5 as const)])
+		const def = rcUnion([rcConstant(5)])
 		const value = def.getValue()
 		expect(value).to.be(5)
 		const check: CheckEquals<typeof value, 5> = true
@@ -47,7 +47,7 @@ describe("union type", () => {
 	})
 
 	test("const union", () => {
-		const def = rcConstUnion(["1", "2", "3"] as const)
+		const def = rcConstUnion(["1", "2", "3"])
 		const value = def.getValue()
 		expect(value).to.be("1")
 		const check: CheckEquals<typeof value, "1" | "2" | "3"> = true

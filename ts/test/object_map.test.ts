@@ -28,7 +28,7 @@ describe("object_map type", () => {
 
 	test("defines mapped type", () => {
 		const def = rcObjectMap(rcInt({default: 5}), {
-			key: rcUnion([rcConstant("uwu" as const), rcConstant("owo" as const)])
+			key: rcUnion([rcConstant("uwu"), rcConstant("owo")])
 		})
 		const value = def.getValue()
 		expect(value).to.eql({uwu: 5, owo: 5})
@@ -39,7 +39,7 @@ describe("object_map type", () => {
 	test("defines mapped type with single key", () => {
 		// why would anyone do that lol, that's just a struct
 		const def = rcObjectMap(rcInt({default: 6}), {
-			key: rcConstant("uwu" as const)
+			key: rcConstant("uwu")
 		})
 		const value = def.getValue()
 		expect(value).to.eql({uwu: 6})

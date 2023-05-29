@@ -37,7 +37,7 @@ const CoordsDef = RC.struct({
 			// this library have union/intersection types
 			// for example, here we declare field of type `string | null`
 			// (keep in mind that this field is also optional, so it will be `string | null | undefined`)
-			district: RC.union([RC.constant(null as const), RC.string()])
+			district: RC.union([RC.constant(null), RC.string()])
 		}
 	})),
 	// we can declare array of string like this
@@ -87,7 +87,7 @@ However, you can create a function that will create a type for you, which is, in
 import {RC} from "@nartallax/ribcage"
 
 function tupleOfTwo<T extends RC.Unknown>(type: T): RC.Tuple<readonly [T, T]>{
-	return RC.Tuple([type, type] as const)
+	return RC.Tuple([type, type])
 }
 ```
 

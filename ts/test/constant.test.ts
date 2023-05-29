@@ -6,7 +6,7 @@ type IfEquals<A, B, T, F> = A extends B ? B extends A ? T : F : F
 
 describe("constant type", () => {
 	test("declares simple constant type", () => {
-		const def = rcConstant(5 as const)
+		const def = rcConstant(5)
 		const v = def.getValue()
 		expect(v).to.be(5)
 		const check: IfEquals<typeof v, 5, string, number> = "owo"

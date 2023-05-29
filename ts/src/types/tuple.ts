@@ -1,8 +1,7 @@
 import {emptyObject} from "src/empty_object"
 import type {RC} from "src/ribcage"
 
-// TODO: const T here...?
-export function rcTuple<T extends readonly RC.Unknown[]>(components: T, def: RC.TupleDefinition<T> = emptyObject): RC.Tuple<T> {
+export function rcTuple<const T extends readonly RC.Unknown[]>(components: T, def: RC.TupleDefinition<T> = emptyObject): RC.Tuple<T> {
 	return {
 		...def,
 		type: "tuple",

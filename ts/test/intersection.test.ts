@@ -22,7 +22,7 @@ describe("intersection type", () => {
 
 	test("can declare intersections of strings", () => {
 		const def = rcIntersection([
-			rcConstant("owo" as const),
+			rcConstant("owo"),
 			rcString()
 		])
 		expect(def.getValue).throwError(/Cannot form value/)
@@ -33,7 +33,7 @@ describe("intersection type", () => {
 	test("can declare intersections of strings with default", () => {
 		// doesn't make much sense, but should work anyway
 		const def = rcIntersection([
-			rcConstant("owo" as const),
+			rcConstant("owo"),
 			rcString()
 		], {getDefault: () => "owo" as const})
 		expect(def.getValue()).to.be("owo")
