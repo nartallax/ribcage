@@ -5,7 +5,7 @@ const emptyArr: readonly any[] = []
 
 /** Struct is an object with fixed set of fields
  * (as opposed to object-map which fields can be determined at runtime) */
-export function rcStruct<const F extends RC.StructFields, E extends RC.Struct = RC.Struct<{}>>(fields: F, def: RC.StructDefinition<F & RC.UnionToIntersection<RC.FieldsOf<E>>> = emptyObject, extnds: E | readonly E[] = emptyArr): RC.Struct<F & RC.UnionToIntersection<RC.FieldsOf<E>>> {
+export function rcStruct<F extends RC.StructFields, E extends RC.Struct = RC.Struct<{}>>(fields: F, def: RC.StructDefinition<F & RC.UnionToIntersection<RC.FieldsOf<E>>> = emptyObject, extnds: E | readonly E[] = emptyArr): RC.Struct<F & RC.UnionToIntersection<RC.FieldsOf<E>>> {
 	// this function has this weird signature to allow for proper type inferrence
 	// it's not possible to make extend-list be a part of definition
 	// (it is possible in case of only one extend, but that's not what I go for)

@@ -124,4 +124,12 @@ describe("struct type", () => {
 		expect(check).to.be(true)
 	})
 
+	test("extended struct fields are not readonly", () => {
+		const A = rcStruct({x: RC.number()})
+		const B = rcStruct({y: RC.number()}, {}, A)
+		const x: RC.Value<typeof B> = {x: 0, y: 0}
+		x.x = 5
+		expect(x.x).to.be(5)
+	})
+
 })

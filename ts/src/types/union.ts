@@ -15,7 +15,7 @@ export function rcUnion<T extends RC.Unknown>(components: readonly T[], def: RC.
 	}
 }
 
-export function rcConstUnion<T extends RC.Constantable>(components: readonly T[], def: RC.UnionDefinition<RC.Constant<T>> = emptyObject): RC.Union<RC.Constant<T>> {
+export function rcConstUnion<const T extends RC.Constantable>(components: readonly T[], def: RC.UnionDefinition<RC.Constant<T>> = emptyObject): RC.Union<RC.Constant<T>> {
 	return rcUnion(components.map(x => rcConstant(x)), def)
 }
 
